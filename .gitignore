@@ -26,3 +26,6 @@ dist-ssr
 # Wasm builds
 ui/public/wasm/
 ui/src/wasm/
+
+# Sample files
+/core/cmd/samples/
