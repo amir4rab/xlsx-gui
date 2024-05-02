@@ -24,8 +24,7 @@ dist-ssr
 *.sw?
 
 # Wasm builds
-ui/public/wasm/
-ui/src/wasm/
+ui/public/wasm/xlsx-core.wasm
 
 # Sample files
 /core/cmd/samples/
