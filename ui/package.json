@@ -19,6 +19,7 @@
     "prep-core": "pnpm run cp-go-exec && pnpm run compile-go"
   },
   "dependencies": {
+    "@heroicons/react": "^2.1.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
