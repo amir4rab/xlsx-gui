@@ -1,7 +1,8 @@
 package main
 
-import "fmt"
+import "github.com/amir4rab/xlsx-gui/core/internal/binder"
 
 func main() {
-	fmt.Println("Hello world")
+	// Calling the bind function
+	binder.Bind()
 }
