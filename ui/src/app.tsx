@@ -17,8 +17,8 @@ function App() {
         <h1 className="font-serif my-0 text-6xl sm:text-8xl font-bold">
           Aurora
         </h1>
-        <h2 className="my-0 mt-2 mb-6 font-light text-xl opacity-85">
-          Modify your excel files with ease!
+        <h2 className="my-0 mt-2 mb-6 font-light text-xl opacity-85 text-balance">
+          Modify your SpreadSheets files with ease!
         </h2>
       </header>
       <Hero
