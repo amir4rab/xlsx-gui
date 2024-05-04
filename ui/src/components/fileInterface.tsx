@@ -20,6 +20,7 @@ interface Props extends SectionProps {
 const FileManager = ({ sheets }: { sheets: string[] }) => {
   const hydratedRef = useRef(false);
 
+  const [isProcessing, setIsProcessing] = useState(true);
   const [rows, setRows] = useState<string[][] | null>(null);
   const [page] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
@@ -31,8 +32,9 @@ const FileManager = ({ sheets }: { sheets: string[] }) => {
     async (sheet: string) => {
       if (sheet === activeSheet && hydratedRef.current) return;
 
-      // Settings the rows to null
-      setRows(null);
+      // Settings processing states
+      setIsProcessing(true);
+      setActiveSheet(sheet);
 
       // Getting the rows from the new sheet
       const { rows, successful, totalPages } = await wasm.getRows({
@@ -44,7 +46,11 @@ const FileManager = ({ sheets }: { sheets: string[] }) => {
       if (successful) {
         setTotalPages(totalPages);
         setRows(rows);
+      } else {
+        window.alert("Something went wrong!");
       }
+
+      setIsProcessing(false);
     },
     [activeSheet, page, wasm]
   );
@@ -59,13 +65,39 @@ const FileManager = ({ sheets }: { sheets: string[] }) => {
   });
 
   return (
-    <div>
+    <div
+      data-is-processing={isProcessing}
+      className="relative data-[is-processing=true]:pointer-events-none"
+    >
+      {isProcessing === true && (
+        <div className="-inset-4 absolute bg-neutral-50/50 dark:bg-neutral-950/50 backdrop-blur-sm flex justify-center items-center">
+          <Loading className="w-8 h-8" />
+        </div>
+      )}
       <div className="flex flex-col md:flex-row justify-between gap-4 my-4">
-        <div className="flex gap-2 justify-start items-center bg-neutral-100/75 dark:bg-neutral-900/50 border border-neutral-200 dark:border-transparent p-1 rounded-2xl">
+        <div
+          className={[
+            "flex",
+            "gap-2",
+            "justify-start",
+            "items-center",
+            "bg-neutral-100/75",
+            "dark:bg-neutral-900/50",
+            "border",
+            "border-neutral-200",
+            "dark:border-transparent",
+            "p-1",
+            "rounded-2xl",
+            "max-w-full",
+            "overflow-auto",
+            "flex-shrink-0",
+            "md:max-w-[50vw]",
+          ].join(" ")}
+        >
           {sheets.map((sheet) => (
             <button
               className="py-1.5 px-5 rounded-xl bg-neutral-100 dark:bg-neutral-900 hover:data-[active=false]:bg-neutral-200 dark:hover:data-[active=false]:bg-neutral-800 data-[active=true]:bg-sky-100 dark:data-[active=true]:bg-sky-900/25 transition-colors duration-200 disabled:pointer-events-none disabled:opacity-80"
-              onClick={setActiveSheet.bind(null, sheet)}
+              onClick={hydrateContent.bind(null, sheet)}
               key={sheet}
               data-active={sheet === activeSheet}
               disabled={rows === null}

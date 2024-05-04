@@ -18,7 +18,7 @@ const FileInput = ({
       <label
         data-processing={isProcessing}
         data-demo={demo}
-        className="w-full h-52 rounded-2xl border border-dashed border-neutral-200 dark:border-neutral-800 text-center hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors duration-200 hover:cursor-pointer shadow-xl shadow-neutral-900/5 flex justify-center items-center gap-2 data-[processing=true]:select-none data-[processing=true]:pointer-events-none data-[demo=true]:select-none data-[demo=true]:pointer-events-none bg-white dark:bg-neutral-950"
+        className="w-full h-64 rounded-2xl border border-dashed border-neutral-200 dark:border-neutral-800 text-center hover:bg-neutral-100 dark:hover:bg-neutral-900 transition-colors duration-200 hover:cursor-pointer shadow-xl shadow-neutral-900/5 flex justify-center items-center gap-2 data-[processing=true]:select-none data-[processing=true]:pointer-events-none data-[demo=true]:select-none data-[demo=true]:pointer-events-none bg-white dark:bg-neutral-950"
         htmlFor={"filePicker" + (demo ? "-demo" : "")}
       >
         {isProcessing ? (
