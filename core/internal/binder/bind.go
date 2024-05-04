@@ -76,27 +76,32 @@ func getSheets(this js.Value, inputs []js.Value) interface{} {
 	return string(b)
 }
 
-type getTopRowsRes struct {
+type getRowsRes struct {
 	Successful bool       `json:"successful"`
 	Rows       [][]string `json:"rows"`
+	TotalPages uint       `json:"totalPages"`
 }
 
-func getTopRows(this js.Value, inputs []js.Value) interface{} {
+func getRows(this js.Value, inputs []js.Value) interface{} {
 	var rows []*xlsx.Row
 
 	// Checking if the file exists
-	if !initialized || len(inputs) != 1 {
-		res := getTopRowsRes{Successful: false, Rows: [][]string{}}
+	if !initialized || len(inputs) != 2 {
+		res := getRowsRes{Successful: false, Rows: [][]string{}}
 		b, _ := json.Marshal(res)
 		return string(b)
 	}
 
 	sheet := inputs[0].String()
+	page := uint(inputs[1].Int())
+
+	const pageSize uint = 100
+	offset := page * pageSize
 
 	// Getting the headers
-	err := processor.GetRows(wb, sheet, &rows, 0, 10)
+	totalPages, err := processor.GetRows(wb, sheet, &rows, offset, pageSize)
 	if err != nil {
-		res := getTopRowsRes{Successful: false, Rows: [][]string{}}
+		res := getRowsRes{Successful: false, Rows: [][]string{}, TotalPages: 0}
 		b, _ := json.Marshal(res)
 		return string(b)
 	}
@@ -112,7 +117,7 @@ func getTopRows(this js.Value, inputs []js.Value) interface{} {
 		parsedRows = append(parsedRows, r)
 	}
 
-	res := getTopRowsRes{Successful: true, Rows: parsedRows}
+	res := getRowsRes{Successful: true, Rows: parsedRows, TotalPages: totalPages}
 	b, _ := json.Marshal(res)
 	return string(b)
 }
@@ -121,7 +126,7 @@ func getTopRows(this js.Value, inputs []js.Value) interface{} {
 func Bind() {
 	js.Global().Set("readXLSXFile", js.FuncOf(readFile))
 	js.Global().Set("getXLSXSheets", js.FuncOf(getSheets))
-	js.Global().Set("getXLSXTopRows", js.FuncOf(getTopRows))
+	js.Global().Set("getXLSXRows", js.FuncOf(getRows))
 
 	// Hanging the main function
 	wg := sync.WaitGroup{}
