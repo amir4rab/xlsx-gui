@@ -7,13 +7,17 @@ import FilePicker from "@/components/filePicker";
 import FileInterface from "@/components/fileInterface";
 import Notice from "@/components/notice";
 
+// Hooks
+import useGuideStatus from "@/hooks/useGuideStatus";
+
 // Icons
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 
 function App() {
+  const { get: getGuideStatus } = useGuideStatus();
   const [activeStage, setActiveState] = useState<
     "hero" | "filePicker" | "fileInterface"
-  >("hero");
+  >(getGuideStatus() === "display" ? "hero" : "filePicker");
 
   return (
     <CoreProvider>
@@ -31,10 +35,12 @@ function App() {
         text="Please Keep in mind, that this application is in its Alpha phase, meaning the main purpose of this version is to check it on different sets of browsers and hardware. Therefore there might be stability and performance is expected problems!"
         type="warning"
       />
-      <Hero
-        isActive={activeStage === "hero"}
-        onProgress={setActiveState.bind(null, "filePicker")}
-      />
+      {getGuideStatus() === "display" && (
+        <Hero
+          isActive={activeStage === "hero"}
+          onProgress={setActiveState.bind(null, "filePicker")}
+        />
+      )}
       <FilePicker
         isActive={activeStage === "filePicker"}
         isVisible={
