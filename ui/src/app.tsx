@@ -5,6 +5,10 @@ import CoreProvider from "@/components/core";
 import Hero from "@/components/hero";
 import FilePicker from "@/components/filePicker";
 import FileInterface from "@/components/fileInterface";
+import Notice from "@/components/notice";
+
+// Icons
+import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 
 function App() {
   const [activeStage, setActiveState] = useState<
@@ -21,6 +25,12 @@ function App() {
           Modify your SpreadSheets files with ease!
         </h2>
       </header>
+      <Notice
+        title="Alpha Version"
+        icon={<ExclamationCircleIcon className="w-6 h-6" />}
+        text="Please Keep in mind, that this application is in its Alpha phase, meaning the main purpose of this version is to check it on different sets of browsers and hardware. Therefore there might be stability and performance is expected problems!"
+        type="warning"
+      />
       <Hero
         isActive={activeStage === "hero"}
         onProgress={setActiveState.bind(null, "filePicker")}
