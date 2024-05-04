@@ -27,7 +27,11 @@ const CoreProvider = ({ children }: { children: ReactNode }) => {
       value={{
         initialized,
         file: { info: fileInfo, set: setFileInfo },
-        wasm: { parseFile: wasm.parseFile },
+        wasm: {
+          parseFile: wasm.parseFile,
+          getRows: wasm.getRows,
+          getSheets: wasm.getSheets,
+        },
       }}
     >
       {children}

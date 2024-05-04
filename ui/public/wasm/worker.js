@@ -730,6 +730,39 @@ const parse = (file) => {
   reader.readAsArrayBuffer(file);
 };
 
+/** Gets the sheets of XLSX file */
+const getSheets = () => {
+  /** @ts-expect-error wasm to ts */
+  const goRes = self.getXLSXSheets();
+
+  /** @type {{ successful: boolean, sheets: string[] }} */
+  const { successful, sheets } = JSON.parse(goRes);
+
+  self.postMessage({
+    command: "get-sheets",
+    successful,
+    data: { sheets },
+  });
+};
+
+/**
+ * Gets rows of the XLSX file
+ * @param {{ page: number, sheet: string }} data
+ */
+const getRows = ({ page, sheet }) => {
+  /** @ts-expect-error wasm to ts */
+  const goRes = self.getXLSXRows(sheet, page);
+
+  /** @type {{ successful: boolean, rows: number[][], totalPages: number }} */
+  const { successful, rows, totalPages } = JSON.parse(goRes);
+
+  self.postMessage({
+    command: "get-rows",
+    successful,
+    data: { rows, totalPages },
+  });
+};
+
 /** @type { (e: MessageEvent) => void } */
 self.onmessage = (e) => {
   /** @type {{ command: string, data: any }} */
@@ -737,12 +770,16 @@ self.onmessage = (e) => {
 
   switch (command) {
     case "init": {
-      init();
-      break;
+      return init();
     }
     case "parse": {
-      parse(data);
-      break;
+      return parse(data);
+    }
+    case "get-sheets": {
+      return getSheets();
+    }
+    case "get-rows": {
+      return getRows(data);
     }
   }
 };

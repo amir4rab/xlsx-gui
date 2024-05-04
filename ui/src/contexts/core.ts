@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
-import type { ParseFile } from "@/wasm/init";
+import type { GetRows, ParseFile, GetSheets } from "@/wasm/main";
 
 import { createContext } from "react";
 import wasm from "@/wasm";
@@ -14,6 +14,8 @@ interface CoreContext {
   initialized: boolean;
   wasm: {
     parseFile: ParseFile;
+    getRows: GetRows;
+    getSheets: GetSheets;
   };
   file: {
     info: FileInfo;
@@ -24,7 +26,11 @@ interface CoreContext {
 /** Facilitates the access of XLSX bindings to the rest of the react project */
 const CoreContext = createContext<CoreContext>({
   initialized: false,
-  wasm: { parseFile: wasm.parseFile },
+  wasm: {
+    parseFile: wasm.parseFile,
+    getRows: wasm.getRows,
+    getSheets: wasm.getSheets,
+  },
   file: {
     info: null,
     set: () => {},
